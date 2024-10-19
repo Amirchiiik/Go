@@ -1,0 +1,47 @@
+.space-list-item {
+    padding: 10px 15px;
+    transition: background-color 0.2s ease;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.space-list-item > div{
+    display: flex;
+    align-items: center;
+}
+
+.space-list-item.active {
+    background-color: rgba(165, 77, 224, 0.16);
+}
+
+.space-list-item .edit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.space-list-item .MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.css-1umw9bq-MuiSvgIcon-root{
+    width: 15px;
+    height: 15px;
+    color: var(--black);;
+}
+
+
+.space-list-item a{
+    color: var(--black);
+    text-decoration: none;  
+}
+
+.space-list-item .icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 24px;
+  color: #fff;
+  margin-right: 8px;
+}

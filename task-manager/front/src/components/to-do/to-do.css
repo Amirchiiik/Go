@@ -1,0 +1,11 @@
+.to-do-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: rgb(86, 86, 86);
+  background-color: rgba(193, 193, 193, 0.115);
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-weight: 700;
+}

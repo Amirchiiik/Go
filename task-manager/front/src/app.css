@@ -1,0 +1,64 @@
+.page {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+
+.all-lists {
+  height: 100vh;
+  flex: 5;
+  padding: 20px;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 30px 0 10px 0;
+}
+
+.box
+  > .MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.css-1umw9bq-MuiSvgIcon-root {
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  color: rgb(125, 125, 125);
+}
+
+.closed-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: rgb(0, 110, 0);
+  background-color: rgba(0, 220, 0, 0.115);
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.in-progress-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: blue;
+  background-color: rgba(0, 62, 220, 0.067);
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.moving-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0 10px;
+  background-color: #f8f9fa;
+}
+
+.moving-container.open {
+  max-height: 200px;
+  padding: 10px;
+}
