@@ -3,11 +3,12 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootStateType } from '../../state/store';
-import { addCurrentTaskAC, TaskType } from '../../state/tasks-reducer';
+import { addCurrentTaskAC, changeStatusTC, deleteTaskTC, TaskType } from '../../state/tasks-reducer';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { ModalEnumType, StatusEnumType } from '../show-modal/ShowModal';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
+import { SpaceType } from '../../state/space-reducer';
 
 type ClosedPropsType = {
   setStatusType: (statusType: StatusEnumType) => void;
@@ -15,10 +16,17 @@ type ClosedPropsType = {
 }
 
 const Closed = ({setStatusType, setModalType}: ClosedPropsType) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
   const closedList =useSelector<RootStateType, TaskType[]>(state => state.tasks.closed);
+
+  const { spaceName } = useParams();
+  let defaultSpace = useSelector<RootStateType, SpaceType>(
+    (state) =>
+      state.spaceData.spaces.find((space) => space.name === spaceName) ||
+      ({} as SpaceType)
+  );
 
   const handleShowInfoModal = (task: TaskType) => {
     setStatusType(StatusEnumType.IN_PROGRESS);
@@ -28,6 +36,12 @@ const Closed = ({setStatusType, setModalType}: ClosedPropsType) => {
   const handleShowEditModal = (task: TaskType) => {
     setStatusType(StatusEnumType.CLOSED);
     setModalType(ModalEnumType.EDIT_MODAL);
+  };
+
+  const handleCheckboxChange = (task: TaskType) => {
+    // Dispatch action to change status to IN_PROGRESS (status "2")
+    dispatch(deleteTaskTC(defaultSpace.id, task.id))
+    window.location.reload();
   };
 
   const toggleContainer = () => {
@@ -57,7 +71,7 @@ const Closed = ({setStatusType, setModalType}: ClosedPropsType) => {
             return (
               <div key={task.id} className="task-item">
                               <>
-              <input type="checkbox" />
+              <input type="checkbox" onChange={() => handleCheckboxChange(task)}/>
               <p
                 onClick={() => {
                   dispatch(addCurrentTaskAC(task));

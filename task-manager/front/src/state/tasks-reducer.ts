@@ -9,6 +9,7 @@ export enum TasksReducerEnumType {
   DELETE_TASK = 'DELETE_TASK',
   EDIT_TASK = 'EDIT_TASK',
   ADD_CURRENT_TASK = 'ADD_CURRENT_TASK',
+  CHANGE_STATUS = 'CHANGE_STATUS',
 }
 
 export type TaskType = {
@@ -51,12 +52,24 @@ export type EditTaskActionType = {
   type: TasksReducerEnumType.EDIT_TASK;
   task: TaskType;
 };
+export type ChangeStatusActionType = {
+  type: TasksReducerEnumType.CHANGE_STATUS;
+  taskId: number;
+  newStatus: StatusEnumType;
+};
+
+export type DeleteTaskActionType = {
+  type: TasksReducerEnumType.DELETE_TASK;
+  taskId: number;
+}
 
 type TasksActionType =
   | SetTasksActionType
   | AddTaskActionType
   | addCurrentTaskActionType
-  | EditTaskActionType;
+  | EditTaskActionType
+  | ChangeStatusActionType
+  | DeleteTaskActionType;
 
 export const tasksReducer = (
   state: TasksStateType = initialState,
@@ -86,27 +99,59 @@ export const tasksReducer = (
             ? [...state.closed, action.task]
             : state.closed,
       };
-      case TasksReducerEnumType.EDIT_TASK:
-        return {
-         ...state,
-          toDo: state.toDo.map((t) =>
-            t.id === action.task.id? action.task : t
-          ),
-          inProgress: state.inProgress.map((t) =>
-            t.id === action.task.id? action.task : t
-          ),
-          closed: state.closed.map((t) =>
-            t.id === action.task.id? action.task : t
-          ),
-        };
+    case TasksReducerEnumType.EDIT_TASK:
+      return {
+        ...state,
+        toDo: state.toDo.map((t) =>
+          t.id === action.task.id ? action.task : t
+        ),
+        inProgress: state.inProgress.map((t) =>
+          t.id === action.task.id ? action.task : t
+        ),
+        closed: state.closed.map((t) =>
+          t.id === action.task.id ? action.task : t
+        ),
+      };
+
+    case TasksReducerEnumType.CHANGE_STATUS:
+      return {
+        ...state,
+        toDo: state.toDo.map((t) =>
+          t.id === action.taskId ? { ...t, status: action.newStatus } : t
+        ),
+        inProgress: state.inProgress.map((t) =>
+          t.id === action.taskId ? { ...t, status: action.newStatus } : t
+        ),
+        closed: state.closed.map((t) =>
+          t.id === action.taskId ? { ...t, status: action.newStatus } : t
+        ),
+      };
     case TasksReducerEnumType.ADD_CURRENT_TASK:
       return {
         ...state,
         currentTask: action.task,
       };
+    case TasksReducerEnumType.DELETE_TASK:
+      return {
+       ...state,
+        toDo: state.toDo.filter((t) => t.id!== action.taskId),
+        inProgress: state.inProgress.filter((t) => t.id!== action.taskId),
+        closed: state.closed.filter((t) => t.id!== action.taskId),
+      };
     default:
       return state;
   }
+};
+
+export const changeStatusAC = (
+  taskId: number,
+  newStatus: StatusEnumType
+): ChangeStatusActionType => {
+  return {
+    type: TasksReducerEnumType.CHANGE_STATUS,
+    taskId,
+    newStatus,
+  };
 };
 
 export const setTasksAC = (tasks: TaskType[]): TasksActionType => {
@@ -127,6 +172,13 @@ export const editTaskAC = (task: TaskType): EditTaskActionType => {
     task,
   };
 };
+
+export const deleteTaskAC = (task: TaskType): DeleteTaskActionType => {
+  return {
+    type: TasksReducerEnumType.DELETE_TASK,
+    taskId: task.id,
+  };
+}
 
 export const getTasksTC = (spaceId: number) => {
   console.log('Fetching tasks for space', spaceId);
@@ -200,3 +252,51 @@ export const editTaskTC = (spaceId: number, task: TaskType) => {
     }
   };
 };
+
+export const changeStatusTC = (
+  spaceId: number,
+  taskId: number,
+  newStatus: StatusEnumType
+) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      const response = await axios.put(
+        `/spaces/${spaceId}/applications/${taskId}`, 
+        {
+          status: newStatus,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log('response change status: ', response.data);
+      dispatch(changeStatusAC(taskId, newStatus));
+    } catch (error) {
+      console.error('Error changing task status:', error);
+      if (axios.isAxiosError(error)) {
+        console.error('Error details:', error.response?.data);
+      }
+    }
+  };
+};
+
+export const deleteTaskTC = (spaceId: number, taskId: number) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      await axios.delete(`/spaces/${spaceId}/applications/${taskId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log('Task deleted');
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      if (axios.isAxiosError(error)) {
+        console.error('Error details:', error.response?.data);
+      }
+    }
+  };
+}
