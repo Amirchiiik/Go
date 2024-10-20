@@ -6,6 +6,7 @@ import Space from '../space/Space';
 import { addSpaceTC, SpaceType } from '../../state/space-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootStateType } from '../../state/store';
+import EditSpace from '../space/EditSpace';
 
 const Navbar = () => {
   const dispatch = useDispatch<any>();
@@ -41,9 +42,13 @@ const Navbar = () => {
           </div>
 
           <ul>
-            {spaces.map((space) => (
-              <Space key={space.id} space={space} isEdit={isEdit} />
-            ))}
+            {spaces.map((space) =>
+              isEdit ? (
+                <EditSpace key={space.id} space={space} setIsEdit={setIsEdit}/>
+              ) : (
+                <Space key={space.id} space={space} />
+              )
+            )}
             {isInputVisible && (
               <li className="list-input">
                 <input

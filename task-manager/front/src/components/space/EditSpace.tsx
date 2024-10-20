@@ -3,17 +3,20 @@ import './space.css';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDispatch } from 'react-redux';
-import { deleteSpaceTC, SpaceType } from '../../state/space-reducer';
+import { deleteSpaceTC, editSpaceTC, SpaceType } from '../../state/space-reducer';
 import { getTasksTC } from '../../state/tasks-reducer';
+import { useState } from 'react';
 
-type SpacePropsType = {
+type EditSpacePropsType = {
   space: SpaceType;
+  setIsEdit: (edit: boolean) => void;
 };
 
-const Space = ({ space }: SpacePropsType) => {
+const EditSpace = ({ space, setIsEdit }: EditSpacePropsType) => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const path = useLocation().pathname;
+  const [spaceName, setSpaceName] = useState(space.name);
 
   const handleDeleteSpace = () => {
     dispatch(deleteSpaceTC(space.id));
@@ -22,6 +25,16 @@ const Space = ({ space }: SpacePropsType) => {
   const handleNavigate = () => {
     dispatch(getTasksTC(space.id));
     navigate(`/${space.name}`);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      
+      spaceName.trim() && dispatch(editSpaceTC(space.id, spaceName)) 
+
+      setIsEdit(false); 
+    }
   };
 
   return (
@@ -35,10 +48,19 @@ const Space = ({ space }: SpacePropsType) => {
         <span className="icon" style={{ backgroundColor: space.colour }}>
           {space.name[0]}
         </span>
-        <p>{space.name}</p>
+        <input
+          type="text"
+          value={spaceName}
+          onChange={(e: any) => setSpaceName(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+      </div>
+
+      <div className="edit-button" onClick={handleDeleteSpace}>
+        <DeleteIcon />
       </div>
     </li>
   );
 };
 
-export default Space;
+export default EditSpace;

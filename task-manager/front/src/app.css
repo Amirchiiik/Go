@@ -4,22 +4,31 @@
   height: 100vh;
 }
 
-
 .all-lists {
   height: 100vh;
   flex: 5;
   padding: 20px;
 }
 
-.box {
+.application-content {
+  padding: 30px 20px 10px 0;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  padding: 30px 0 10px 0;
 }
 
-.box
-  > .MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.css-1umw9bq-MuiSvgIcon-root {
+.application-content div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  display: flex;
+  gap: 10px;
+}
+
+.box > .MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.css-1umw9bq-MuiSvgIcon-root {
   cursor: pointer;
   width: 35px;
   height: 35px;
@@ -61,4 +70,24 @@
 .moving-container.open {
   max-height: 200px;
   padding: 10px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: rgb(86, 86, 86);
+  background-color: rgba(248, 249, 250, 0.115);
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.plus-icon {
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  color: rgb(112, 112, 112);
+  margin-top: 3px;
 }

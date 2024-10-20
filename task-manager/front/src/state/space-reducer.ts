@@ -36,6 +36,7 @@ export type AddSpaceActionType = {
 export type EditSpaceActionType = {
   type: SpaceReducerEnumType.EDIT_SPACE;
   spaceId: number;
+  spaceName: string;
 };
 
 export type deleteSpaceActionType = {
@@ -58,6 +59,13 @@ export const spaceReducer = (
       return { ...state, spaces: action.spaces };
     case SpaceReducerEnumType.ADD_SPACE:
       return { ...state, spaces: [...state.spaces, action.space] };
+    case SpaceReducerEnumType.EDIT_SPACE: 
+      return {
+        ...state,
+        spaces: state.spaces.map((s) =>
+          s.id === action.spaceId ? {...s, name: action.spaceName } : s
+        ),
+      }
     case SpaceReducerEnumType.DELETE_SPACE:
       return {
         ...state,
@@ -81,8 +89,8 @@ export const addSpaceAC = (space: SpaceType) => {
   return { type: SpaceReducerEnumType.ADD_SPACE, space };
 };
 
-export const EditSpaceActionType = (spaceId: number) => {
-  return { type: SpaceReducerEnumType.EDIT_SPACE, spaceId };
+export const editSpaceAC = (spaceId: number, spaceName: string) => {
+  return { type: SpaceReducerEnumType.EDIT_SPACE, spaceId, spaceName };
 };
 
 export const deleteSpaceAC = (spaceId: number) => {
@@ -125,6 +133,25 @@ export const addSpaceTC = (spaceName: string) => {
     }
   };
 };
+
+export const editSpaceTC = (spaceId: number, spaceName: string) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      const response = await axios.put(mainURL + '/spaces/' + spaceId, { name: spaceName }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('response edit space: ' + response.data);
+
+      dispatch(editSpaceAC(spaceId, spaceName));
+    } catch (err) {
+      console.error('Error editing space:', err);
+      console.log('editing space: ' + spaceName);
+    }
+  }
+}
 
 export const deleteSpaceTC = (spaceId: number) => {
   return async (dispatch: Dispatch) => {
