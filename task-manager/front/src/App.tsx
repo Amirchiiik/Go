@@ -17,6 +17,7 @@ function App () {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/:spaceName" element={<MainPage />} />
+          <Route path="/:spaceName/:taskId" element={<MainPage />} />
         </Routes>
       </BrowserRouter>
     </div>

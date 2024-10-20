@@ -15,9 +15,6 @@ const Space = ({ space }: SpacePropsType) => {
   const navigate = useNavigate();
   const path = useLocation().pathname;
 
-  const handleDeleteSpace = () => {
-    dispatch(deleteSpaceTC(space.id));
-  };
 
   const handleNavigate = () => {
     dispatch(getTasksTC(space.id));

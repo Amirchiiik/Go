@@ -20,6 +20,7 @@ const EditSpace = ({ space, setIsEdit }: EditSpacePropsType) => {
 
   const handleDeleteSpace = () => {
     dispatch(deleteSpaceTC(space.id));
+    dispatch(getTasksTC(space.id));
   };
 
   const handleNavigate = () => {

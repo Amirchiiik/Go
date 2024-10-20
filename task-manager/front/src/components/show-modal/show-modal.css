@@ -1,18 +1,15 @@
 .show-modal {
-    width: 100%;
     height: 100vh;
     display: none;
 }
 
 .show-modal.active {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: block;
 }
 
 .show-modal-overlay {
     background-color: rgba(0, 0, 0, 0.5);
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;

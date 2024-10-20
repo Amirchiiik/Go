@@ -36,7 +36,7 @@ const Navbar = () => {
         <div className="all-spaces">
           <div className="navbar-title-container">
             <p className="title">Spaces</p>
-            <button onClick={handleEditSpace}>
+            <button className="edit-icon" onClick={handleEditSpace}>
               <EditIcon />
             </button>
           </div>

@@ -4,48 +4,73 @@ import Closed from '../components/closed/Closed';
 import InProgress from '../components/in-progress/InProgress';
 import ToDo from '../components/to-do/ToDo';
 import ShowModal, {
-  ShowModalEnumType,
+  ModalEnumType,
+  StatusEnumType,
 } from '../components/show-modal/ShowModal';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootStateType } from '../state/store';
 import { SpaceType } from '../state/space-reducer';
 import { getTasksTC } from '../state/tasks-reducer';
+import InfoModal from '../components/show-modal/InfoModal';
+import EditModal from '../components/show-modal/EditModal';
 
 const MainPage = () => {
   const { spaceName } = useParams();
+  const { taskId} = useParams();
   const dispatch = useDispatch<any>();
-  console.log("space name: " + spaceName);
+  console.log('space name: ' + spaceName);
   let defaultSpace = useSelector<RootStateType, SpaceType>(
-    (state) => state.spaceData.spaces.find((space) => space.name === spaceName) || {} as SpaceType
+    (state) =>
+      state.spaceData.spaces.find((space) => space.name === spaceName) ||
+      ({} as SpaceType)
   );
 
-  const [modalType, setModalType] = useState<ShowModalEnumType>(
-    ShowModalEnumType.NONE
+  const [statusType, setStatusType] = useState<StatusEnumType>(
+    StatusEnumType.NONE
+  );
+  const [modalType, setModalType] = useState<ModalEnumType>(
+    ModalEnumType.SHOW_MODAL
   );
 
   useEffect(() => {
-    if(defaultSpace.id) {
+    if (defaultSpace.id) {
       dispatch(getTasksTC(Number(defaultSpace.id)));
     }
-  })
-
+  });
 
   return (
     <div className="page main-page">
       <Navbar />
 
       <div className="all-lists">
-        <Closed setModalType={setModalType} />
-        <InProgress setModalType={setModalType} />
-        <ToDo setModalType={setModalType} />
+        <Closed setStatusType={setStatusType} setModalType={setModalType}/>
+        <InProgress setStatusType={setStatusType} setModalType={setModalType}/>
+        <ToDo setStatusType={setStatusType} setModalType={setModalType}/>
       </div>
 
-      <ShowModal
-        modalType={modalType}
-        spaceId={defaultSpace.id}
-        setModalType={setModalType}
-      />
+      {modalType === ModalEnumType.SHOW_MODAL ? (
+        <ShowModal
+          statusType={statusType}
+          spaceId={defaultSpace.id}
+          setStatusType={setStatusType}
+        />
+      ) : modalType === ModalEnumType.INFO_MODAL ? (
+        <InfoModal
+          statusType={statusType}
+          spaceId={defaultSpace.id}
+          setStatusType={setStatusType}
+        />
+      ) : modalType === ModalEnumType.EDIT_MODAL ? (
+        <EditModal
+          taskId={Number(taskId)}
+          statusType={statusType}
+          spaceId={defaultSpace.id}
+          setStatusType={setStatusType}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

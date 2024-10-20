@@ -91,3 +91,8 @@
   color: rgb(112, 112, 112);
   margin-top: 3px;
 }
+
+
+.task-item p {
+  cursor: pointer;
+}
